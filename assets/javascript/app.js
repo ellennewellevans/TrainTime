@@ -60,6 +60,17 @@ var firebaseConfig = {
     var trainDestination = childSnapshot.val().destination;
     var trainFirst = childSnapshot.val().first;
     var trainFrequency = childSnapshot.val().frequency;
+
+
+    var firstTrainTemp = moment(childSnapshot.val().trainFirst, "hh:mm").subtract(1, "years");
+        var timeDifference = moment().diff(moment(firstTrainTemp), "minutes");
+        var remainder = timeDifference % childSnapshot.val().trainFrequency;
+
+        //Calculate minutes away
+        var minutesAway = childSnapshot.val().trainFrequency - remainder;
+
+        var nextArrivalTemp = moment().add(minutesAway, "minutes");
+        nextArrival = moment(nextArrivalTemp).format("hh:mm");
   
     // Train Info
     console.log(trainName);
@@ -71,8 +82,9 @@ var firebaseConfig = {
     var newRow = $("<tr>").append(
       $("<td>").text(trainName),
       $("<td>").text(trainDestination),
-      $("<td>").text(trainFirst),
       $("<td>").text(trainFrequency),
+      $("<td>").text(nextArrival),
+      $("<td>").text(minutesAway)
     );
   
     // Append the new row to the table
